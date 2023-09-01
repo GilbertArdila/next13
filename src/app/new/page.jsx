@@ -1,12 +1,24 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-
-
 
 const NewProduct = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = data => console.log(data);
+
+  const [categories, setCategories] = useState([])
+
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const response = await fetch('http://localhost:3000/api/categories')
+
+      const data = await response.json()
+      return setCategories(data)
+    }
+    getCategories()
+  }, [])
+
 
 
   return (
@@ -43,20 +55,19 @@ const NewProduct = () => {
         <label
           className='mb-2 text-lg font-bold'
           htmlFor="category">Category</label>
-         <select 
-         className='w-[90%] h-10 border-2 border-gray-300 rounded-md px-2 text-black font-mono'
-         {...register("category")}>
-        <option value="smartphones">smartphones</option>
-        <option value="laptops">laptops</option>
-        <option value="desktops">desktops</option>
-        <option value="accesories">accesories</option>
-        <option value="smartwatches">smartwatches</option>
-    </select>
-        
-       
-        <button 
-        className='w-[90%] h-10 bg-blue-500 text-white rounded-md mt-5'
-        type="submit">Submit</button>
+        <select
+          className='w-[90%] h-10 border-2 border-gray-300 rounded-md px-2 text-black font-mono'
+          {...register("category")}>
+            
+          {categories?.map((category) => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          ))}
+        </select>
+
+
+        <button
+          className='w-[90%] h-10 bg-blue-500 text-white rounded-md mt-5'
+          type="submit">Submit</button>
       </form>
     </div>
   )
