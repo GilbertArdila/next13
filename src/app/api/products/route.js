@@ -15,12 +15,13 @@ export async function GET () {
 // create POST function
 export async function POST (request) {
     try{
-    const {name, price, categoryId} = await request.json();
+    const {name, price, categoryId,image} = await request.json();
     const product = await prisma.product.create({
         data: {
             name,
             price,
-            categoryId
+            categoryId,
+            image
         }
     })
     return NextResponse.json( { message: "this is your new product", product })
